@@ -1,0 +1,48 @@
+---
+title: "Final Project Week 6"
+output: html_notebook
+---
+## Task 1: Identifying the outcome variable
+My outcome variable is going to be price. This is a continuous variable, so I will be using a linear regression. 
+```{r}
+library(tidyverse)
+diamonds <- read_csv("diamonds 2.csv") 
+
+diamonds_plot <- diamonds %>%
+  ggplot() + 
+  geom_histogram(mapping = aes(x = price), bins = 20, color = "white")
+diamonds_plot
+```
+I chose a linear regression and not a logistic regression because my outcome variable, which is price, is continuous. A logistic regression would require that the variable be binary, or answering somewhat of a yes or no question. My data does not fit this metric.
+
+## Task 2: Fitting the model
+```{r}
+model <- lm(formula = price ~ carat + cut, data = diamonds)
+summary(model)
+```
+
+
+## Task 3: Interpreting the regression coefficients
+For the first predictor coefficient, the predictor was carat size, and the outcome was price. The predictor coefficient was +7871.08. This means that for each additional carat, the price of the diamond increased by $7,851.08 since the sign of the coefficient was positive. Since the p-value was <2e-16, this means this is statistically significant. This means that there is strong evidence that carat size and price are related. 
+
+For the second predictor coefficient, the predictor was a "good" diamond cut, and the outcome was price. The predictor coefficient for a good cut of diamond was +1120.33. This means that for a diamond that has a "good" cut, the price increased by $1,120.33 compared to a "fair" cut diamond since the sign of the coefficient was positive. Since the p-value was <2e-16, this means this is statistically significant. This means that there is strong evidence that the average price difference between a "good" cut and a "fair" cut is different.  
+
+
+For the third predictor coefficient, the predictor was an "ideal" diamond cut, and the outcome was price. The predictor coefficient for an ideal cut of diamond was +1800.92. This means that an "ideal" cut diamond will cost $1,800.92 more than a "fair" cut diamond since the sign of the coefficient was positive. Since the p-value was <2e-16, this means this is statistically significant. This means that there is strong evidence that the average price difference between an "ideal" cut and a "fair" cut is different. 
+ 
+
+For the fourth predictor coefficient, the predictor was a "premium" cut diamond, and the outcome was price. The predictor coefficient for a premium cut of diamond was +1439.08. This means that a "premium" cut diamond will cost $1,439.08 more than a "fair" cut diamond since the sign of the coefficient was positive. Since the p-value was <2e-16, this means this is statistically significant. This means that there is strong evidence that the average price difference between a "premium" cut and a "fair" cut is different. 
+
+For the final predictor coefficient, the predictor was a "very good" cut diamond, and the outcome was price. The predictor coefficient for a very good cut of diamond was +1510.14. This means that for a diamond that has a very good cut, the price increased by $1,510.14 compared to a "fair" cut diamond since the sign of the coefficient was positive. Since the p-value was <2e-16, this means this is statistically significant. This means that there is strong evidence that the average price difference between a "very good" cut and a "fair" cut is different. 
+
+## Task 4: Running one diagnostic check
+```{r}
+plot(model, which = 1)
+plot(model, which = 2)
+```
+
+## Running diagnostics 
+On average in the residuals vs. fitted plot, the range of the observed values for price matched the range for the predicted values for carat and cut, so the residuals are mostly 0. The values are mostly scattered randomly around zero with no super clear patterns or changes in spread when plotted against predicted values. However, the red line does deviate a little away from zero as the fitted value number increases. This could raise some concern, but overall, the scatter is pretty random around zero. In the QQ plot, the residuals do seem relatively normally distributed as the majority of the values fall on the expected plot line, with only the tails deviating away from the plot line. 
+
+## Written Paragraph Reflection
+My model had the outcome as price and the predictors as carat and diamond cut. Key results showed that the direction of all of the predictor coefficients was positive, indicating an increase in price when there was an increase in carat size as well as when the quality of the diamond cut increased on the diamond cut scale compared to the "fair" cut diamond. All of the predictor coefficients had statistical significance, which implies that the price does variably change when you go up on the scale of  diamond quality. A diamond that could be considered more "rare" or harder to obtain, such as a large carat diamond or an "ideal" cut of diamond, will be more expensive than a "fair" cut diamond or a lower carat size. Some concerns when running the diagnostic checks was the residual deviation away from zero as the fitted values increased in the residuals vs. fitted plot. This indicates that the residuals might not be normally distributed, and that would mean that the linear regression might not be an appropriate regression analysis for this, since a necessity of linear regression is that the residuals are normally distributed. I am not as concerned about the QQ plot, since the values tend to stay on the plot line and only deviate away on the tail ends, so this makes me feel less concerned about the concerns I had with the residual vs. fitted plot. Overall, I think the data passed the diagnostic checks and the regression analysis was successfully run. 
