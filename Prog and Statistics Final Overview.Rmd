@@ -23,6 +23,22 @@ diamonds
 
 ```{r}
 diamonds %>%
+  group_by(cut) %>%
+  summarize(count = n())
+diamonds %>%
+summarise(
+Min = min(carat), 
+Q1 = quantile(carat, probs = 0.25), 
+Median = median(carat),
+Q3 = quantile(carat, probs = 0.75), 
+Max = max(carat))
+diamonds %>%
+  ggplot() + 
+  geom_histogram(mapping = aes(x=carat))
+```
+
+```{r}
+diamonds %>%
   ggplot() + 
   geom_point(mapping = aes(x=carat, y=price))
 ```
