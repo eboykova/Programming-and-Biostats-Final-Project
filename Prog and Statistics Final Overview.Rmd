@@ -1,5 +1,5 @@
 ---
-title: "Programming and Statistics Final Project "
+title: "Programming and Statistics Final Summary"
 output: html_notebook
 editor_options: 
   markdown: 
@@ -9,7 +9,7 @@ editor_options:
 ### We are using a data set that logs and characterizes diamonds. We found this data set on Kaggle.
 
 Assignment completed by Emma Boykova, Elise Truchan, Nicole Klein,
-Mariam Coulibaly
+Mariam Coulibaly, Khadija Yousuf
 
 ```{r}
 library(tidyverse)
@@ -21,59 +21,36 @@ diamonds
 
 ### Descriptive Analysis
 
-In our data set, as the carat size increases, the price of the diamond
-increases. This would be a positive correlation between the carat size
-and the diamond's price. There are some fluctuating prices that appear
-at certain, specific carat sizes, such as 1.5 carat diamonds. This could
-be because of the new popularity of lab-grown diamonds, where there are
-an abundance of carats at different prices since the demand might set
-different prices depending on the jeweler. This also occurs in this data
-set at 2 carats and 3 carats, indicating these carats might be the most
-popular for individuals buying the diamonds in this data set. We can
-also see that in this data set, it is much less common to see super
-large and super expensive carats, and more common to see smaller, less
-expensive diamonds. This makes sense since there are fewer "premium" cut
-diamonds, which tend to be more expensive.
+```{r}
+diamonds %>%
+  ggplot() + 
+  geom_point(mapping = aes(x=carat, y=price))
+```
+
+In our data set, as the carat size increases, the price of the diamond increases. This would be a positive correlation between the carat size and the diamond's price. There are some fluctuating prices that appear at certain, specific carat sizes, such as 1.5 carat diamonds. This is seen by multiple points on the same vertical line of carat size. This could be because of how dynamic the diamond market is, as well as the relatively new introduction of lab-grown diamonds. This also occurs in this data set at 2 carats and 3 carats, which might indicate that these are more common carat sizes that have variability in price. We can also see that in this dataset, it is much less common to see super large and super expensive carats, and more common to see smaller, less expensive diamonds. This makes sense since there are fewer "premium" cut diamonds, which tend to be more expensive. 
 
 ### Inferential Analysis
 
-I used a wilcoxon rank-sum test because my data set, when plotted as a
-histogram, had a strong right skew. I also wanted to compare a
-continuous outcome between 2 groups, the price and the color grade of
-the diamonds rated "E" and "I", which affirmed my decision to use a
-wilcoxon rank-sum test. The p-value for this test was \<2.2e-16. Based
-on this p-value, since it is below a significance level of 0.05, this
-provides evidence against the null hypothesis and indicates the data is
-inconsistent with the null hypothesis. To conclude, I was able to reject
-the null hypothesis that the average price of diamonds with a color
-value of "E" is the same as diamonds with a color value of "I". I might
-be making a type I error because I am rejecting the null hypothesis when
-it could actually be true. For example, I could conclude that color
-grade "E" and "I" diamonds have an difference in average price when in
-reality, they might be the same average price, which would support the
-null hypothesis instead of reject it.
+```{r}
+diamonds_filtered <- diamonds %>%
+  filter(color %in% c("E", "I")) 
+
+diamonds_plot <- diamonds_filtered %>%
+  ggplot() + 
+  geom_histogram(mapping = aes(x = price, fill = color), bins = 20, color = "white")
+diamonds_plot
+```
+
+
+We used a wilcoxon rank-sum test because our dataset, when plotted as a histogram, had a strong right skew. We also wanted to compare a continuous outcome between 2 groups, the price distribution and the color grade of the diamonds rated "E" and "I", which affirmed our decision to use a wilcoxon rank-sum test. The p-value for this test was <2.2e-16. Based on this p-value, since it is below a significance level of 0.05, this provides evidence against the null hypothesis and indicates the data is inconsistent with the null hypothesis. To conclude, we were able to reject the null hypothesis that the price distribution of diamonds with a color value of "E" is the same as diamonds with a color value of "I". We might be making a type I error because we are rejecting the null hypothesis when it could actually be true. For example, we could conclude that color grade "E" and "I" diamonds have an difference in price distributions when in reality, they might be the same distribution, which would support the null hypothesis instead of reject it. 
 
 ### Regression Analysis
 
-My model had the outcome as price and the predictors as carat and
-diamond cut. Key results showed that the direction of all of the
-predictor coefficients was positive, indicating an increase in price
-when there was an increase in carat size as well as when the quality of
-the diamond cut increased on the diamond cut scale compared to the
-"fair" cut diamond. All of the predictor coefficients had statistical
-significance, which implies that the price does variably change when you
-go up on the scale of diamond quality. A diamond that could be
-considered more "rare" or harder to obtain, such as a large carat
-diamond or an "ideal" cut of diamond, will be more expensive than a
-"fair" cut diamond or a lower carat size. Some concerns when running the
-diagnostic checks was the residual deviation away from zero as the
-fitted values increased in the residuals vs. fitted plot. This indicates
-that the residuals might not be normally distributed, and that would
-mean that the linear regression might not be an appropriate regression
-analysis for this, since a necessity of linear regression is that the
-residuals are normally distributed. I am not as concerned about the QQ
-plot, since the values tend to stay on the plot line and only deviate
-away on the tail ends, so this makes me feel less concerned about the
-concerns I had with the residual vs. fitted plot. Overall, I think the
-data passed the diagnostic checks and the regression analysis was
-successfully run.
+```{r}
+model <- lm(formula = price ~ carat + cut, data = diamonds)
+summary(model)
+plot(model, which = 1)
+plot(model, which = 2)
+```
+
+Our model had the outcome as price and the predictors as carat and diamond cut. Key results showed that the direction of all of the predictor coefficients was positive, indicating an increase in price when there was an increase in carat size as well as when the quality of the diamond cut increased on the diamond cut scale compared to the "fair" cut diamond. All of the predictor coefficients had statistical significance, which implies that the price does variably change as you go up on the scale of  diamond quality. A diamond that could be considered more "rare" or harder to obtain, such as a large carat diamond or an "ideal" cut of diamond, will be more expensive than a "fair" cut diamond or a lower carat size. Some concerns when running the diagnostic checks was the residual deviation away from zero as the fitted values increased in the residuals vs. fitted plot. This indicates that the residuals might not be normally distributed, and that would mean that the linear regression might not be an appropriate regression analysis for this, since a necessity of linear regression is that the residuals are normally distributed. We are not as concerned about the QQ plot, since the values tend to stay on the plot line and only deviate away on the tail ends, so this makes me feel less concerned about the concerns we had with the residual vs. fitted plot. Overall, we think the data passed the diagnostic checks and the regression analysis was successfully run. 
